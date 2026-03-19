@@ -1,0 +1,9 @@
+pytest
+requests
+pytest-bdd
+selenium
+webdriver-manager
+faker
+jsonschema
+allure-pytest
+python-dotenv
