@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:18 User reached the page, context initialized
+INFO     test_users:test_users.py:29 POST /users | payload: {'name': 'John', 'username': 'boczek', 'password': 'toczek'} | status: 201
+INFO     test_users:test_users.py:34 Response status code: 201
+INFO     test_users:test_users.py:41 Response body: {'name': 'John', 'username': 'boczek', 'password': 'toczek', 'id': 11}
