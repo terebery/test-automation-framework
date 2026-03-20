@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:18 User reached the page, context initialized
+INFO     test_users:test_users.py:130 GET /users/45465 | status: 404
+INFO     test_users:test_users.py:135 Expected: 404 | Got: 404
+INFO     test_users:test_users.py:142 Response body: {}
