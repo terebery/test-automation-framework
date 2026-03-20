@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:18 User reached the page, context initialized
+INFO     test_users:test_users.py:196 GET /users/1 | status: 200
+INFO     test_users:test_users.py:59 Response status code: 200
+INFO     test_users:test_users.py:202 Content-Type header: application/json; charset=utf-8
