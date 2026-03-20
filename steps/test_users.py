@@ -1,34 +1,46 @@
+import allure
 from pytest_bdd import scenario, parsers, given, when, then
 import logging
 
-from API.clients import api_client
+logger = logging.getLogger(__name__)
 
 
 ### TC_01 ###
+@allure.title('TC_01 - Create user with complete data')
 @scenario('../features/user.feature', 'TC_01 - Create user with complete data')
 def test_create_user():
     pass
 
 @given('user reach the page')
 def user_reach_page(context):
-    context['response']= None
+    with allure.step('User reaches the page'):
+        context['response'] = None
+        logger.info('User reached the page, context initialized')
 
 @when('user enter username and password')
 def user_enter_credentials(context, api_client):
     payload = {
         "name": "John",
         "username": "boczek",
-        "password": "toczek" }
-    context['response'] = api_client.post("/users", data=payload)
+        "password": "toczek"
+    }
+    with allure.step(f'User sends POST /users with payload: {payload}'):
+        context['response'] = api_client.post("/users", data=payload)
+        logger.info(f'POST /users | payload: {payload} | status: {context["response"].status_code}')
 
 @then('response status code shall contain 201')
 def response_status(context):
-    assert context['response'].status_code == 201
+    with allure.step(f'Verify response status code is 201'):
+        logger.info(f'Response status code: {context["response"].status_code}')
+        assert context['response'].status_code == 201
 
 @then('body contains Id')
 def body_contains_id(context):
-    body = context['response'].json()
-    assert body['id'] == context['response'].json()['id']
+    with allure.step('Verify body contains ID field'):
+        body = context['response'].json()
+        logger.info(f'Response body: {body}')
+        assert 'id' in body
+
 
 ### TC_02 ###
 @scenario('../features/user.feature', 'TC_02 - Get existing user')
@@ -37,23 +49,30 @@ def test_get_existing_user():
 
 @when('user tries to get existing user')
 def get_existing_user(context, api_client):
-    context['response'] = api_client.get('/users/1')
+    with allure.step('User sends GET /users/1'):
+        context['response'] = api_client.get('/users/1')
+        logger.info(f'GET /users/1 | status: {context["response"].status_code}')
 
 @then('response status code shall contain 200')
 def response_code_200(context):
-    assert context['response'].status_code == 200
+    with allure.step('Verify response status code is 200'):
+        logger.info(f'Response status code: {context["response"].status_code}')
+        assert context['response'].status_code == 200
 
 @then('response has proper format')
 def check_response_format(context):
-    body = context['response'].json()
-    assert isinstance(body, dict)
-    assert "id" in body
-    assert "username" in body
-    assert "name" in body
-    expected_id = 1
-    logging.info(f'expected id: {expected_id}, got {body["id"]}')
-    logging.info(f'body: {body}')
-    assert expected_id == context['response'].json()["id"]
+    with allure.step('Verify response body has proper format'):
+        body = context['response'].json()
+        logger.info(f'Response body: {body}')
+        assert isinstance(body, dict)
+        assert "id" in body
+        assert "username" in body
+        assert "name" in body
+        expected_id = 1
+        logger.info(f'Expected ID: {expected_id}, got: {body["id"]}')
+        assert expected_id == body["id"]
+
+
 ### TC_03 ###
 @scenario('../features/user.feature', 'TC_03 - Get not existing user')
 def test_get_not_existing_user():
@@ -61,18 +80,23 @@ def test_get_not_existing_user():
 
 @when('user tries to get not existing user')
 def get_not_existing_user(context, api_client):
-    context['response'] = api_client.get('/users/fakeuser')
+    with allure.step('User sends GET /users/fakeuser'):
+        context['response'] = api_client.get('/users/fakeuser')
+        logger.info(f'GET /users/fakeuser | status: {context["response"].status_code}')
 
 @then('response status code shall contain 404')
 def response_code_404(context):
-    logging.info(f'response status code: {context['response'].status_code}')
-    assert context['response'].status_code == 404
+    with allure.step('Verify response status code is 404'):
+        logger.info(f'Response status code: {context["response"].status_code}')
+        assert context['response'].status_code == 404
 
 @then("body is equal to '{}'")
 def body_equals(context):
-    body = context['response'].json()
-    logging.info(f'body: {body}')
-    assert body == {}
+    with allure.step('Verify response body is empty'):
+        body = context['response'].json()
+        logger.info(f'Response body: {body}')
+        assert body == {}
+
 
 ### TC_04 ###
 @scenario('../features/user.feature', 'TC_04 - Get all users')
@@ -81,42 +105,47 @@ def test_get_all_users():
 
 @when('user tries to get all users')
 def get_all_users(context, api_client):
-    context['response'] = api_client.get('/users')
+    with allure.step('User sends GET /users'):
+        context['response'] = api_client.get('/users')
+        logger.info(f'GET /users | status: {context["response"].status_code}')
 
 @then('response is list with 10 elements')
 def response_is_list_with_10(context):
-    body = context['response'].json()
-    logging.info(f'body type: {type(body)}, is instance body list {isinstance(body,list)}')
-    logging.info(f'list length: {len(body)}')
-    assert len(body) == 10
-    assert isinstance(body, list)
+    with allure.step('Verify response is a list with 10 elements'):
+        body = context['response'].json()
+        logger.info(f'Body type: {type(body)} | Is list: {isinstance(body, list)} | Length: {len(body)}')
+        assert isinstance(body, list)
+        assert len(body) == 10
 
 
 ### TC_05 ###
 @scenario('../features/user.feature', 'TC_05 - Check format of single user')
-def test_check_format_single_user(context):
+def test_check_format_single_user():
     pass
 
 @when(parsers.parse('get data of single user with ID: {user_ID:d}'))
-def get_data_for_single_user(context,api_client,user_ID):
-    context['response'] = api_client.get(f'/users/{user_ID}')
-    logging.info(f'response status code: {context['response'].status_code}')
+def get_data_for_single_user(context, api_client, user_ID):
+    with allure.step(f'User sends GET /users/{user_ID}'):
+        context['response'] = api_client.get(f'/users/{user_ID}')
+        logger.info(f'GET /users/{user_ID} | status: {context["response"].status_code}')
 
 @then(parsers.parse('response status code is equal {response_status_code:d}'))
 def response_status_code_equal(context, response_status_code):
-    assert context['response'].status_code == response_status_code
+    with allure.step(f'Verify response status code is {response_status_code}'):
+        logger.info(f'Expected: {response_status_code} | Got: {context["response"].status_code}')
+        assert context['response'].status_code == response_status_code
 
 @then(parsers.parse('response body is validated for {response_code:d}'))
 def response_status_code_validated(context, response_code):
-    if response_code == 200:
-        logging.info(f'response status code: {response_code}')
+    with allure.step(f'Validate response body for status code {response_code}'):
         body = context['response'].json()
-        assert 'address' in body
-        assert 'company' in body
-    else:
-        logging.info(f'response status code: {response_code}')
-        body = context['response'].json()
-        assert body == {}
+        logger.info(f'Response body: {body}')
+        if response_code == 200:
+            assert 'address' in body
+            assert 'company' in body
+        else:
+            assert body == {}
+
 
 ### TC_06 ###
 @scenario('../features/user.feature', 'TC_06 - Update user data')
@@ -130,51 +159,71 @@ def update_user_data(id, name, username, context, api_client):
         'name': name,
         'username': username
     }
-    context['response'] = api_client.put(f'/users/{id}', data=payload)
-    logging.info(f'sent update data: {payload}')
+    with allure.step(f'User sends PUT /users/{id} with payload: {payload}'):
+        context['response'] = api_client.put(f'/users/{id}', data=payload)
+        logger.info(f'PUT /users/{id} | payload: {payload} | status: {context["response"].status_code}')
+
 @then(parsers.parse('body contains new data {name} {username}'))
 def body_contains_new_data(context, name, username):
-    body = context['response'].json()
-    logging.info(f'body: {body["name"]} {body["username"]}')
-    assert body["name"] == name
-    assert body["username"] == username
+    with allure.step(f'Verify body contains updated name: {name} and username: {username}'):
+        body = context['response'].json()
+        logger.info(f'Response body name: {body["name"]} | username: {body["username"]}')
+        assert body["name"] == name
+        assert body["username"] == username
+
 
 ### TC_07 ###
 @scenario('../features/user.feature', 'TC_07 - Delete user')
 def test_delete_user():
     pass
+
 @when(parsers.parse('delete single user'))
 def delete_user(context, api_client):
-    context['response'] = api_client.delete('/users/1')
-    logging.info(f'response status code: {context['response'].status_code}')
+    with allure.step('User sends DELETE /users/1'):
+        context['response'] = api_client.delete('/users/1')
+        logger.info(f'DELETE /users/1 | status: {context["response"].status_code}')
+
 
 ### TC_08 ###
 @scenario('../features/user.feature', 'TC_08 - Checking Content-Type response')
 def test_check_content_type_response():
     pass
+
 @when('get data of existing user')
 def get_data_for_existing_user(context, api_client):
-    context['response'] = api_client.get('/users/1')
+    with allure.step('User sends GET /users/1'):
+        context['response'] = api_client.get('/users/1')
+        logger.info(f'GET /users/1 | status: {context["response"].status_code}')
+
 @then('header is application/json')
 def header_is_json(context):
-    assert  'application/json' in  context['response'].headers['content-type']
+    with allure.step('Verify Content-Type header is application/json'):
+        content_type = context['response'].headers['content-type']
+        logger.info(f'Content-Type header: {content_type}')
+        assert 'application/json' in content_type
 
 
 ### TC_09 ###
 @scenario('../features/user.feature', 'TC_09 - Creating user with minimal payload')
 def test_create_user_min_payload():
     pass
+
 @when('user is created with only name in payload')
 def create_user_(context, api_client):
-    payload = {'name':'Mietek'}
-    context['response'] = api_client.post('/users', data=payload)
-    logging.info(f'response status code: {context['response'].status_code}')
+    payload = {'name': 'Mietek'}
+    with allure.step(f'User sends POST /users with minimal payload: {payload}'):
+        context['response'] = api_client.post('/users', data=payload)
+        logger.info(f'POST /users | payload: {payload} | status: {context["response"].status_code}')
+
 
 ### TC_10 ###
 @scenario('../features/user.feature', 'TC_10 - Checking nested fields')
 def test_check_nested_fields():
     pass
-@then(parsers.parse("{key} is nested in {field}"))
+
+@then(parsers.parse('{key} is nested in {field}'))
 def check_nested_fields(context, key, field):
-    body = context['response'].json()
-    assert key in body[f'{field}']
+    with allure.step(f'Verify {key} is nested in {field}'):
+        body = context['response'].json()
+        logger.info(f'Checking if "{key}" exists in body["{field}"]: {body.get(field)}')
+        assert key in body[field]
