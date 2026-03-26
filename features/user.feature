@@ -56,7 +56,7 @@ Feature: User
 
   Scenario: TC_08 - Checking Content-Type response
     Given user reach the page
-    When get data of existing user
+    When user tries to get existing user
     Then response status code shall contain 200
     And header is application/json
 

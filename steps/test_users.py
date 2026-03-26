@@ -3,7 +3,7 @@ import logging
 import jsonschema
 from jsonschema import  validate
 from pytest_bdd import scenario, parsers, given, when, then
-from pytest_expect import expect
+
 
 from API.clients import api_client
 
@@ -194,11 +194,6 @@ def delete_user(context, api_client):
 def test_check_content_type_response():
     pass
 
-@when('get data of existing user')
-def get_data_for_existing_user(context, api_client):
-    with allure.step('User sends GET /users/1'):
-        context['response'] = api_client.get('/users/1')
-        logger.info(f'GET /users/1 | status: {context["response"].status_code}')
 
 @then('header is application/json')
 def header_is_json(context):
