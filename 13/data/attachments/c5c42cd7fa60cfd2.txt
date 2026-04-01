@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:23 User reached the page, context initialized
+INFO     test_users:test_users.py:115 GET /users | status: 200
+INFO     test_users:test_users.py:64 Response status code: 200
+INFO     test_users:test_users.py:122 Body type: <class 'list'> | Is list: True | Length: 10
