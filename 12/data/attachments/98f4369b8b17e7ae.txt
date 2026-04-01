@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:23 User reached the page, context initialized
+INFO     test_users:test_users.py:170 PUT /users/2 | payload: {'id': 2, 'name': 'Auston', 'username': 'NoRingTill67'} | status: 200
+INFO     test_users:test_users.py:64 Response status code: 200
+INFO     test_users:test_users.py:176 Response body name: Auston | username: NoRingTill67

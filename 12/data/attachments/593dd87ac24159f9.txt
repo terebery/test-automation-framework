@@ -1,0 +1,1 @@
+INFO     test_users:test_users.py:95 Response status code: 404

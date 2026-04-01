@@ -1,0 +1,1 @@
+INFO     test_users:test_users.py:23 User reached the page, context initialized
