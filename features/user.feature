@@ -98,7 +98,7 @@ Feature: User
     Given  user reach the page
     When user tries to get one existing user
     Then response time is less than 1000ms
-    When user tries to get all users
+    When user tries to get all users for performance check
     Then response time is less than 2000ms
 
   Scenario: TC_15 - Users List Structure validation

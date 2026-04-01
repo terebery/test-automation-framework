@@ -113,6 +113,7 @@ def get_all_users(context, api_client):
     with allure.step('User sends GET /users'):
         context['response'] = api_client.get('/users')
         logger.info(f'GET /users | status: {context["response"].status_code}')
+        print(context['response'].json())
 
 @then('response is list with 10 elements')
 def response_is_list_with_10(context):
@@ -294,22 +295,24 @@ def response_body_matches_schema(context):
     except jsonschema.exceptions.ValidationError as e:
         logger.error(f'Schema validation failed. Error: {e.message}')
         raise
-
+### TC_14 ###
 @scenario('../features/user.feature', 'TC_14 - Performance Baseline')
 def test_performance_baseline():
     pass
-@when('user tries to get one existing user')
-def get_one_user():
-    with allure.step('Get single user data'):
-        pass
-@then('response time is less than 1000ms')
-def response_time_single_user(api_client):
-        with allure.step('Checking response time is less than 1500ms'):
-            response_time = api_client.get_response_time('/users/1')
-            logger.info(f'Response time: {response_time}, Expected: 1500ms = 1s')
-            assert response_time < 1
 
-@when('user tries to get all users')
+@when('user tries to get all users for performance check')
+def get_all_user():
+    with allure.step('Get all users data'):
+        pass
+
+@then('response time is less than 1000ms')
+def response_time_all_users(api_client):
+    with allure.step('Checking response time is less than 1000ms'):
+        response_time = api_client.get_response_time('/users')
+        logger.info(f'Response time: {response_time}, Expected: 1000ms = 1s')
+        assert response_time < 1
+
+@when('user tries to get all users for performance check')
 def get_all_user():
     with allure.step('Get single user data'):
         pass
