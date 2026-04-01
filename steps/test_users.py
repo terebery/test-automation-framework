@@ -300,22 +300,23 @@ def response_body_matches_schema(context):
 def test_performance_baseline():
     pass
 
-@when('user tries to get all users for performance check')
-def get_all_user():
-    with allure.step('Get all users data'):
+@when('user tries to get one existing user')  # ← pasuje do feature file
+def get_one_user_performance():
+    with allure.step('Get single user data'):
         pass
 
 @then('response time is less than 1000ms')
-def response_time_all_users(api_client):
+def response_time_single_user(api_client):
     with allure.step('Checking response time is less than 1000ms'):
-        response_time = api_client.get_response_time('/users')
+        response_time = api_client.get_response_time('/users/1')
         logger.info(f'Response time: {response_time}, Expected: 1000ms = 1s')
         assert response_time < 1
 
-@when('user tries to get all users for performance check')
-def get_all_user():
-    with allure.step('Get single user data'):
+@when('user tries to get all users for performance check')  # ← pasuje do feature file
+def get_all_users_performance():
+    with allure.step('Get all users data'):
         pass
+
 @then('response time is less than 2000ms')
 def response_time_all_users(api_client):
     with allure.step('Checking response time is less than 2000ms'):

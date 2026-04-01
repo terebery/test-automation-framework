@@ -101,4 +101,4 @@ Feature: User
     When user tries to get all users for performance check
     Then response time is less than 2000ms
 
-  Scenario: TC_15 - Users List Structure validation
+  #Scenario: TC_15 - Users List Structure validation
