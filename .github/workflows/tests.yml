@@ -43,6 +43,11 @@ jobs:
           echo "result.json count: $(find allure-results -name '*-result.json' | wc -l)"
           echo "container.json count: $(find allure-results -name '*-container.json' | wc -l)"
 
+      - name: Validate allure results are present
+        if: always()
+        run: |
+          test "$(find allure-results -name '*-result.json' | wc -l)" -gt 0
+
       - name: Upload allure results
         uses: actions/upload-artifact@v4
         if: always()
@@ -63,7 +68,13 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: allure-results
-          path: allure-results
+          path: .
+
+      - name: Debug downloaded results
+        run: |
+          echo "Downloaded files:"
+          find allure-results -maxdepth 2 -type f | sort || true
+          echo "result.json count: $(find allure-results -name '*-result.json' | wc -l)"
 
       - name: Load Allure report history
         uses: actions/checkout@v3
