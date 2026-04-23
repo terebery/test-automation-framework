@@ -323,3 +323,86 @@ def response_time_all_users(api_client):
         response_time = api_client.get_response_time('/users')
         logger.info(f'Response time: {response_time}, Expected: 2000ms = 2s')
         assert response_time < 2
+
+### TC_15 ###
+@scenario('../features/user.feature', 'TC_15 - Users List Structure validation')
+def test_users_list_structure():
+    pass
+
+@given('I send GET request to "/users"')
+def get_users(context, api_client):
+    with allure.step('GET /users'):
+        context['response'] = api_client.get('/users')
+
+@then('response is a list which contains at least 5 users')
+def response_is_list_structure(context):
+    with allure.step('Verify response contains at least 5 users'):
+        body = context['response'].json()
+        logger.info(f'Verify response contains at least 5 users: {body}')
+        assert len(body) >= 5
+        resp_type = type(body)
+        logger.info(f'Verify response is a list: resp_type: {resp_type}')
+        assert resp_type is list
+
+@then('each user in the list has fields: id, name, username, email')
+def each_user_field_contains_fields(context):
+    with allure.step('Verify each user has fields: id, name, username, email'):
+        body = context['response'].json()
+        logger.info(f'Verify each user has fields: id, name, username, email: {body}')
+        for user in body:
+            logger.info(f'Verify each user has fields: id, name, username, email: {user}')
+            assert 'id' in user
+            assert 'name' in user
+            assert 'username' in user
+            assert 'email' in user
+
+@then('Every id is unique')
+def every_id_is_unique(context):
+    with allure.step('Verify every id is unique'):
+        body = context['response'].json()
+        ids = [item["id"] for item in body]
+        id_control_list = []
+        for id in ids:
+            if id not in id_control_list:
+                id_control_list.append(id)
+        logger.info(f'Verify every id is unique: {ids}')
+        assert len(id_control_list) == len(ids)
+
+### TC_16 ###
+@scenario('../features/user.feature', 'TC_16 - Full User Lifecycle')
+def test_full_user_lifecycle():
+    pass
+
+@given(parsers.parse('I send POST request with a new {id}'))
+def post_new_user(context, api_client, id):
+    with allure.step(f'POST users/{id}'):
+        context['response'] = api_client.post('/users', data={'id': id})
+
+@when(parsers.parse('request returns 201 with a new {id}'))
+def request_returns_201_with_id(context, api_client, id):
+    with allure.step(f'response for POST /users/{id}'):
+        body = context['response'].json()
+        logger.info(f'Verify response for POST /users/{id}: {body}')
+        received_id = body['id']
+        assert received_id == 11
+        assert context['response'].status_code == 201
+
+@then(parsers.parse('I send PUT request with updated data {id} {name} {username} {email}'))
+def put_updated_data(context, api_client, id, name, username, email):
+    with allure.step(f'response for PUT /users/{id}'):
+        payload = {
+            'id': int(id),
+            'name': name,
+            'username': username,
+            'email': email
+        }
+        context['response'] = api_client.put(f'/users/{int(id)}', data=payload)
+        logger.info(f'Verify response for PUT /users/{id}: {payload}')
+
+@then(parsers.parse('I send DELETE request for {id}'))
+def delete_request(context, api_client, id):
+    with allure.step(f'response for DELETE /users/{id}'):
+        context['response'] = api_client.delete(f'/users/{id}')
+        logger.info(f'Verify response for DELETE /users/{id}')
+
+

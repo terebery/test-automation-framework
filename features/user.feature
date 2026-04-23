@@ -101,4 +101,24 @@ Feature: User
     When user tries to get all users for performance check
     Then response time is less than 2000ms
 
-  #Scenario: TC_15 - Users List Structure validation
+  Scenario: TC_15 - Users List Structure validation
+    Given I send GET request to "/users"
+    Then response status code shall contain 200
+    And response is a list which contains at least 5 users
+    And each user in the list has fields: id, name, username, email
+    And Every id is unique
+
+
+Scenario Outline: TC_16 - Full User Lifecycle
+  Given I send POST request with a new <id>
+  When request returns 201 with a new <id>
+  Then I send PUT request with updated data <id> <name> <username> <email>
+  And response status code shall contain 200
+  Then I send DELETE request for <id>
+  And response status code shall contain 200
+  Examples:
+    |name|username|id|email|
+    |Brady|sagvdfs|1|bradytkachukcantread@gmail.com|
+    |Auston|NoRingTill67|2|mitchimissuu@wp.pl      |
+    |Nathan|MissingEmptyNet|3|sorrycanada@hotmail.com|
+
