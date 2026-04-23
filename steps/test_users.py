@@ -62,6 +62,7 @@ def body_contains_id(context):
 
 
 ### TC_02 ###
+@allure.title('TC_02 - Get existing user')
 @scenario('../features/user.feature', 'TC_02 - Get existing user')
 def test_get_existing_user():
     pass
@@ -93,6 +94,7 @@ def check_response_format(context):
 
 
 ### TC_03 ###
+@allure.title('TC_03 - Get not existing user')
 @scenario('../features/user.feature', 'TC_03 - Get not existing user')
 def test_get_not_existing_user():
     pass
@@ -118,6 +120,7 @@ def body_equals(context):
 
 
 ### TC_04 ###
+@allure.title('TC_04 - Get all users')
 @scenario('../features/user.feature', 'TC_04 - Get all users')
 def test_get_all_users():
     pass
@@ -139,6 +142,7 @@ def response_is_list_with_10(context):
 
 
 ### TC_05 ###
+@allure.title('TC_05 - Check format of single user')
 @scenario('../features/user.feature', 'TC_05 - Check format of single user')
 def test_check_format_single_user():
     pass
@@ -168,6 +172,7 @@ def response_status_code_validated(context, response_code):
 
 
 ### TC_06 ###
+@allure.title('TC_06 - Update user data')
 @scenario('../features/user.feature', 'TC_06 - Update user data')
 def test_update_user_data():
     pass
@@ -193,6 +198,7 @@ def body_contains_new_data(context, name, username):
 
 
 ### TC_07 ###
+@allure.title('TC_07 - Delete user')
 @scenario('../features/user.feature', 'TC_07 - Delete user')
 def test_delete_user():
     pass
@@ -205,6 +211,7 @@ def delete_user(context, api_client):
 
 
 ### TC_08 ###
+@allure.title('TC_08 - Checking Content-Type response')
 @scenario('../features/user.feature', 'TC_08 - Checking Content-Type response')
 def test_check_content_type_response():
     pass
@@ -219,6 +226,7 @@ def header_is_json(context):
 
 
 ### TC_09 ###
+@allure.title('TC_09 - Creating user with minimal payload')
 @scenario('../features/user.feature', 'TC_09 - Creating user with minimal payload')
 def test_create_user_min_payload():
     pass
@@ -232,6 +240,7 @@ def create_user_(context, api_client):
 
 
 ### TC_10 ###
+@allure.title('TC_10 - Checking nested fields')
 @scenario('../features/user.feature', 'TC_10 - Checking nested fields')
 def test_check_nested_fields():
     pass
@@ -244,6 +253,7 @@ def check_nested_fields(context, key, field):
         assert key in body[field]
 
 ### TC_11 ###
+@allure.title('TC_11 - Response contains Content-Type')
 @scenario('../features/headers.feature', 'TC_11 - Response contains Content-Type')
 def test_check_response_contains_content_type():
     pass
@@ -263,6 +273,7 @@ def header_is_charset(context):
         assert 'charset' in content_type
 
 ### TC_12 ###
+@allure.title('TC_12 - Get user with invalid ID returns 404')
 @scenario('../features/user.feature', 'TC_12 - Get user with invalid ID returns 404')
 def test_get_user_invalid_id_returns_404():
     pass
@@ -272,6 +283,7 @@ def get_user_by_invalid_id(context, api_client, invalid_id):
         context['response'] = api_client.get(f'/users/{invalid_id}')
 
 ### TC_13 ###
+@allure.title('TC_13 - Schema Validation')
 @scenario('../features/user.feature', 'TC_13 - Schema Validation')
 def test_validate_schema():
     pass
@@ -310,6 +322,7 @@ def response_body_matches_schema(context):
         logger.error(f'Schema validation failed. Error: {e.message}')
         raise
 ### TC_14 ###
+@allure.title('TC_14 - Performance Baseline')
 @scenario('../features/user.feature', 'TC_14 - Performance Baseline')
 def test_performance_baseline():
     pass
@@ -339,6 +352,7 @@ def response_time_all_users(api_client):
         assert response_time < 2
 
 ### TC_15 ###
+@allure.title('TC_15 - Users List Structure validation')
 @scenario('../features/user.feature', 'TC_15 - Users List Structure validation')
 def test_users_list_structure():
     pass
@@ -383,6 +397,7 @@ def every_id_is_unique(context):
         assert len(id_control_list) == len(ids)
 
 ### TC_16 ###
+@allure.title('TC_16 - Full User Lifecycle')
 @scenario('../features/user.feature', 'TC_16 - Full User Lifecycle')
 def test_full_user_lifecycle():
     pass
@@ -419,6 +434,7 @@ def delete_request(context, api_client, id):
         logger.info(f'Verify response for DELETE /users/{id}')
 
 ### TC-17 ###
+@allure.title('TC_17 - User Creation With Random Data (Faker + Data-Driven)')
 @scenario('../features/user.feature', 'TC_17 - User Creation With Random Data (Faker + Data-Driven)')
 def test_user_creation_with_faker():
     pass
