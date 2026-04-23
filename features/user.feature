@@ -122,3 +122,14 @@ Scenario Outline: TC_16 - Full User Lifecycle
     |Auston|NoRingTill67|2|mitchimissuu@wp.pl      |
     |Nathan|MissingEmptyNet|3|sorrycanada@hotmail.com|
 
+Scenario Outline: TC_17 - User Creation With Random Data (Faker + Data-Driven)
+  Then I send POST request with a new:
+    |id|<id>|
+    |name|<name>|
+    |username|<username>|
+    |email   |<email>   |
+  Then request returns 201 with a new faker.id
+  And request data is reflected correctly in response body
+  Examples:
+  |id|name|username|email|
+  |faker.id|faker.name|faker.username|faker.email|

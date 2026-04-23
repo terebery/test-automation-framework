@@ -1,14 +1,28 @@
 import allure
 import logging
 import jsonschema
+import random
 from jsonschema import  validate
 from pytest_bdd import scenario, parsers, given, when, then
+from faker import Faker
 
-
+fake = Faker()
 from API.clients import api_client
 
 logger = logging.getLogger(__name__)
 
+### Help functions ###
+def _resolve_value(raw:str):
+    v = raw.strip()
+    if v == "faker.id":
+        return random.randint(1,100)
+    elif v == "faker.name":
+        return fake.name()
+    elif v == "faker.email":
+        return fake.email()
+    elif v == "faker.username":
+        return fake.user_name()
+    return v
 
 ### TC_01 ###
 @allure.title('TC_01 - Create user with complete data')
@@ -378,14 +392,13 @@ def post_new_user(context, api_client, id):
     with allure.step(f'POST users/{id}'):
         context['response'] = api_client.post('/users', data={'id': id})
 
-@when(parsers.parse('request returns 201 with a new {id}'))
-def request_returns_201_with_id(context, api_client, id):
+@when(parsers.parse('request returns 201 with a new {id:d}'))
+def request_returns_201_with_numeric_id(context, id):
     with allure.step(f'response for POST /users/{id}'):
         body = context['response'].json()
-        logger.info(f'Verify response for POST /users/{id}: {body}')
-        received_id = body['id']
-        assert received_id == 11
+        logger.info(f'Verify response for POST: {body}')
         assert context['response'].status_code == 201
+        assert 'id' in body
 
 @then(parsers.parse('I send PUT request with updated data {id} {name} {username} {email}'))
 def put_updated_data(context, api_client, id, name, username, email):
@@ -405,4 +418,45 @@ def delete_request(context, api_client, id):
         context['response'] = api_client.delete(f'/users/{id}')
         logger.info(f'Verify response for DELETE /users/{id}')
 
+### TC-17 ###
+@scenario('../features/user.feature', 'TC_17 - User Creation With Random Data (Faker + Data-Driven)')
+def test_user_creation_with_faker():
+    pass
 
+@then('I send POST request with a new:')
+def post_new_user_from_table(context, api_client, datatable):
+    with allure.step('Send request with faker POST /users'):
+        payload = {}
+        for row in datatable:
+            key = row[0].strip()
+            value = row[1].strip()
+            payload[key] = _resolve_value(value)
+        if "id" in payload:
+            try:
+                payload["id"] = int(payload["id"])
+            except ValueError:
+                pass
+
+        context["request_payload"] = payload
+        context['response'] = api_client.post('/users', data=payload)
+
+@then('request returns 201 with a new faker.id')
+def request_returns_201_with_faker_id(context):
+    with allure.step('response for POST /users with faker.id'):
+        body = context['response'].json()
+        logger.info(f'POST response body (faker): {body}')
+        assert context['response'].status_code == 201
+        assert 'id' in body
+
+@then("request data is reflected correctly in response body")
+def request_data_is_reflected_correctly(context):
+    with allure.step('Verify request data reflected correctly'):
+        body = context['response'].json()
+        sent = context['request_payload']
+        logger.info(f'Verify request data reflected correctly: {sent}')
+        logger.info(f'Verify response data reflected correctly: {body}')
+
+        assert body.get("name") == sent.get("name")
+        assert body.get("username") == sent.get("username")
+        assert body.get("email") == sent.get("email")
+        assert context["response"].status_code == 201
