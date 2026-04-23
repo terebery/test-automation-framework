@@ -1,0 +1,4 @@
+INFO     test_users:test_users.py:37 User reached the page, context initialized
+INFO     test_users:test_users.py:74 GET /users/1 | status: 200
+INFO     test_users:test_users.py:79 Response status code: 200
+INFO     test_users:test_users.py:252 Checking if "name" exists in body["company"]: {'name': 'Romaguera-Crona', 'catchPhrase': 'Multi-layered client-server neural-net', 'bs': 'harness real-time e-markets'}

@@ -1,0 +1,3 @@
+INFO     test_users:test_users.py:463 POST response body (faker): {'id': 11, 'name': 'Cheryl Andrews', 'username': 'samantha22', 'email': 'tinagay@example.org'}
+INFO     test_users:test_users.py:472 Verify request data reflected correctly: {'id': 20, 'name': 'Cheryl Andrews', 'username': 'samantha22', 'email': 'tinagay@example.org'}
+INFO     test_users:test_users.py:473 Verify response data reflected correctly: {'id': 11, 'name': 'Cheryl Andrews', 'username': 'samantha22', 'email': 'tinagay@example.org'}

@@ -1,0 +1,3 @@
+INFO     test_users:test_users.py:37 User reached the page, context initialized
+INFO     test_users:test_users.py:339 Response time: 0.084022, Expected: 1000ms = 1s
+INFO     test_users:test_users.py:351 Response time: 0.081166, Expected: 2000ms = 2s

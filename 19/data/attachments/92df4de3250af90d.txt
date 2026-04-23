@@ -1,0 +1,2 @@
+INFO     test_users:test_users.py:224 Content-Type header: application/json; charset=utf-8
+INFO     test_users:test_users.py:272 Content-Type header: application/json; charset=utf-8
